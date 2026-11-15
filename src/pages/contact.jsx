@@ -15,7 +15,9 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
+import { fadeUp, fromRight, stagger, viewport } from "../lib/motion";
 // ✏️ Change these
 const INFO = {
   firstName: "Syed Ali shahid",
@@ -26,17 +28,17 @@ const INFO = {
   socials: [
     {
       name: "LinkedIn",
-      href: "https://linkedin.com/in/your-id",
+      href: "https://www.linkedin.com/in/alishahidzaidi/",
       icon: BoxesLinked,
     },
     {
       name: "Instagram",
-      href: "https://instagram.com/your-id",
+      href: "https://instagram.com",
       icon: CircleUser,
     },
     {
       name: "Github",
-      href: "https://github.com/your-id",
+      href: "https://github.com/SyedAlishahid",
       icon: LayoutDashboard,
     },
   ],
@@ -137,31 +139,53 @@ export default function Contact() {
       className="relative isolate overflow-hidden bg-[#08080a] text-white"
     >
       {/* background */}
-      <div className="pointer-events-none absolute -left-32 top-0 -z-10 h-[420px] w-[420px] rounded-full bg-blue-600/15 blur-[130px]" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-[360px] w-[360px] rounded-full bg-indigo-500/10 blur-[130px]" />
+      <motion.div
+        animate={{ scale: [1, 1.15, 1] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -left-32 top-0 -z-10 h-[420px] w-[420px] rounded-full bg-blue-600/15 blur-[130px]"
+      />
+      <motion.div
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-[360px] w-[360px] rounded-full bg-indigo-500/10 blur-[130px]"
+      />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.04)_1px,transparent_0)] [background-size:28px_28px]" />
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-5 py-20 sm:px-8 lg:grid-cols-[1.4fr_0.6fr] lg:gap-20 lg:py-28">
         {/* LEFT: form */}
-        <div>
-          <Badge
-            variant="outline"
-            className="mb-6 gap-2 rounded-full border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-emerald-300"
-          >
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-            Available for new projects
-          </Badge>
+        <motion.div
+          variants={stagger(0.12)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+        >
+          <motion.div variants={fadeUp} className="mb-6 inline-block">
+            <Badge
+              variant="outline"
+              className="gap-2 rounded-full border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-emerald-300"
+            >
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              Available for new projects
+            </Badge>
+          </motion.div>
 
-          <h2 className="text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+          <motion.h2
+            variants={fadeUp}
+            className="text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+          >
             Let's start a
             <span className="block bg-gradient-to-r from-white via-white to-blue-400 bg-clip-text text-transparent">
               project together
             </span>
-          </h2>
+          </motion.h2>
 
-          <form onSubmit={onSubmit} className="mt-14 max-w-2xl space-y-9">
+          <motion.form
+            variants={stagger(0.12)}
+            onSubmit={onSubmit}
+            className="mt-14 max-w-2xl space-y-9"
+          >
             {FIELDS.map((f) => (
-              <div key={f.id} className="group">
+              <motion.div key={f.id} variants={fadeUp} className="group">
                 <Label
                   htmlFor={f.id}
                   className="text-[11px] font-normal uppercase tracking-widest text-white/40 transition group-focus-within:text-blue-400"
@@ -179,10 +203,10 @@ export default function Contact() {
                   onChange={onChange}
                   className={lineInput}
                 />
-              </div>
+              </motion.div>
             ))}
 
-            <div className="group">
+            <motion.div variants={fadeUp} className="group">
               <Label
                 htmlFor="message"
                 className="text-[11px] font-normal uppercase tracking-widest text-white/40 transition group-focus-within:text-blue-400"
@@ -200,42 +224,77 @@ export default function Contact() {
                 onChange={onChange}
                 className={`${lineInput} min-h-28 resize-none py-3`}
               />
-            </div>
+            </motion.div>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button
-                type="submit"
-                disabled={status === "sending"}
-                className="group/btn h-auto gap-4 rounded-full bg-transparent p-0 text-base font-semibold text-white hover:bg-transparent"
-              >
-                {status === "sent"
-                  ? "Message sent!"
-                  : status === "sending"
-                    ? "Sending..."
-                    : "Send it!"}
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 shadow-[0_0_30px_rgba(37,99,235,0.6)] transition duration-300 group-hover/btn:scale-110 group-hover/btn:bg-blue-500">
-                  {status === "sending" ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : status === "sent" ? (
-                    <Check className="h-5 w-5" />
-                  ) : (
-                    <ArrowUpRight className="h-5 w-5 transition group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                  )}
-                </span>
-              </Button>
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-wrap items-center gap-4 pt-2"
+            >
+              <motion.div whileHover={{ x: 4 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="group/btn h-auto gap-4 rounded-full bg-transparent p-0 text-base font-semibold text-white hover:bg-transparent"
+                >
+                  {status === "sent"
+                    ? "Message sent!"
+                    : status === "sending"
+                      ? "Sending..."
+                      : "Send it!"}
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 shadow-[0_0_30px_rgba(37,99,235,0.6)] transition duration-300 group-hover/btn:scale-110 group-hover/btn:bg-blue-500">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={
+                          status === "sending"
+                            ? "s"
+                            : status === "sent"
+                              ? "ok"
+                              : "i"
+                        }
+                        initial={{ scale: 0, rotate: -90, opacity: 0 }}
+                        animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                        exit={{ scale: 0, rotate: 90, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex"
+                      >
+                        {status === "sending" ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : status === "sent" ? (
+                          <Check className="h-5 w-5" />
+                        ) : (
+                          <ArrowUpRight className="h-5 w-5 transition group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                        )}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                </Button>
+              </motion.div>
 
-              {status === "error" && (
-                <p className="text-sm text-red-400">
-                  Something went wrong. Please try again.
-                </p>
-              )}
-            </div>
-          </form>
-        </div>
+              <AnimatePresence>
+                {status === "error" && (
+                  <motion.p
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="text-sm text-red-400"
+                  >
+                    Something went wrong. Please try again.
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </motion.form>
+        </motion.div>
 
         {/* RIGHT: details */}
-        <aside className="space-y-10 lg:pt-44">
-          <div>
+        <motion.aside
+          variants={stagger(0.15, 0.3)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          className="space-y-10 lg:pt-44"
+        >
+          <motion.div variants={fromRight}>
             <p className="mb-4 text-[11px] uppercase tracking-widest text-white/40">
               Contact details
             </p>
@@ -260,15 +319,15 @@ export default function Contact() {
                 {INFO.phone}
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={fromRight}>
             <p className="mb-4 text-[11px] uppercase tracking-widest text-white/40">
               Socials
             </p>
             <ul className="space-y-3">
               {INFO.socials.map(({ name, href, icon: Icon }) => (
-                <li key={name}>
+                <motion.li key={name} whileHover={{ x: 6 }}>
                   <a
                     href={href}
                     target="_blank"
@@ -279,12 +338,12 @@ export default function Contact() {
                     {name}
                     <ArrowUpRight className="h-4 w-4 -translate-x-1 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" />
                   </a>
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={fromRight}>
             <p className="mb-4 text-[11px] uppercase tracking-widest text-white/40">
               Location
             </p>
@@ -293,8 +352,8 @@ export default function Contact() {
               {INFO.location}
             </p>
             <p className="mt-1 text-sm text-white/40">Local Time: {time}</p>
-          </div>
-        </aside>
+          </motion.div>
+        </motion.aside>
       </div>
     </section>
   );

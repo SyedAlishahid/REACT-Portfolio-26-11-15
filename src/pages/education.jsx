@@ -1,8 +1,10 @@
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, BookOpen, Calendar, MapPin } from "lucide-react";
+import { fadeUp, viewport } from "../lib/motion";
 
-// ✏️ Edit these. Newest first.
+// ✏️ Keep your own EDUCATION array here. Newest first.
 const EDUCATION = [
   {
     degree: "BS Cloud Computing and Information Science",
@@ -36,21 +38,46 @@ export default function EducationSection() {
       id="education"
       className="relative isolate overflow-hidden bg-[#05060a] text-white"
     >
-      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[340px] w-[600px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[130px]" />
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[340px] w-[600px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[130px]"
+      />
 
       <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8 lg:py-28">
         {/* heading */}
-        <div className="text-center">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          className="text-center"
+        >
           <h2 className="text-5xl font-bold italic tracking-tight sm:text-6xl md:text-7xl [font-family:'Caveat','Kalam',cursive]">
             Education
           </h2>
-          <div className="mx-auto mt-4 h-1 w-28 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.7)]" />
-        </div>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={viewport}
+            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+            className="mx-auto mt-4 h-1 w-28 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.7)]"
+          />
+        </motion.div>
 
         {/* timeline */}
         <div className="relative mt-16">
-          {/* vertical line */}
-          <div className="absolute bottom-0 left-5 top-0 w-px bg-gradient-to-b from-blue-500 via-white/15 to-transparent md:left-1/2 md:-translate-x-1/2" />
+          {/* vertical line (grows down). Outer div keeps Tailwind positioning, inner one animates */}
+          <div className="absolute bottom-0 left-5 top-0 w-px md:left-1/2 md:-translate-x-1/2">
+            <motion.div
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 1.4, ease: "easeInOut" }}
+              style={{ originY: 0 }}
+              className="h-full w-full bg-gradient-to-b from-blue-500 via-white/15 to-transparent"
+            />
+          </div>
 
           <div className="space-y-12">
             {EDUCATION.map((item, i) => {
@@ -61,70 +88,91 @@ export default function EducationSection() {
                   key={item.degree}
                   className="relative grid grid-cols-[2.5rem_1fr] gap-5 md:grid-cols-2 md:gap-16"
                 >
-                  {/* dot */}
-                  <div className="absolute left-5 top-6 z-10 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-blue-500/50 bg-[#0a0c14] shadow-[0_0_25px_rgba(59,130,246,0.5)] md:left-1/2">
-                    <Icon className="h-4 w-4 text-blue-400" />
+                  {/* dot: outer div = position, inner motion.div = pop animation */}
+                  <div className="absolute left-5 top-6 z-10 -translate-x-1/2 md:left-1/2">
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={viewport}
+                      transition={{
+                        type: "spring",
+                        stiffness: 260,
+                        damping: 15,
+                        delay: 0.2,
+                      }}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-blue-500/50 bg-[#0a0c14] shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+                    >
+                      <Icon className="h-4 w-4 text-blue-400" />
+                    </motion.div>
                   </div>
 
                   {/* spacer for mobile line + desktop empty side */}
-                  <div className={`md:hidden`} />
+                  <div className="md:hidden" />
 
-                  <Card
-                    className={`col-start-2 rounded-3xl border-white/10 bg-neutral-900/70 p-0 text-white shadow-xl backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-600/20 md:col-start-auto ${
+                  {/* card slides in from its own side */}
+                  <motion.div
+                    initial={{ opacity: 0, x: left ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={viewport}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    className={`col-start-2 ${
                       left ? "md:col-start-1" : "md:col-start-2"
                     }`}
                   >
-                    <CardContent className="space-y-4 p-6 sm:p-8">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge
-                          variant="outline"
-                          className="gap-1.5 rounded-full border-white/15 bg-white/5 text-white/70"
-                        >
-                          <Calendar className="h-3 w-3" />
-                          {item.period}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className={`rounded-full ${
-                            item.current
-                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                              : "border-blue-500/30 bg-blue-500/10 text-blue-300"
-                          }`}
-                        >
-                          {item.status}
-                        </Badge>
-                      </div>
-
-                      <div>
-                        <h3 className="text-2xl font-bold leading-tight tracking-tight">
-                          {item.degree}
-                        </h3>
-                        <p className="mt-2 text-lg font-medium text-blue-400">
-                          {item.school}
-                        </p>
-                        <p className="mt-1 flex items-center gap-1.5 text-sm text-white/40">
-                          <MapPin className="h-3.5 w-3.5" />
-                          {item.location}
-                        </p>
-                      </div>
-
-                      <p className="leading-relaxed text-white/50">
-                        {item.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {item.tags.map((t) => (
+                    <Card className="rounded-3xl border-white/10 bg-neutral-900/70 p-0 text-white shadow-xl backdrop-blur transition duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-600/20">
+                      <CardContent className="space-y-4 p-6 sm:p-8">
+                        <div className="flex flex-wrap items-center gap-2">
                           <Badge
-                            key={t}
                             variant="outline"
-                            className="rounded-full border-white/10 bg-white/5 text-white/60"
+                            className="gap-1.5 rounded-full border-white/15 bg-white/5 text-white/70"
                           >
-                            {t}
+                            <Calendar className="h-3 w-3" />
+                            {item.period}
                           </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                          <Badge
+                            variant="outline"
+                            className={`rounded-full ${
+                              item.current
+                                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                                : "border-blue-500/30 bg-blue-500/10 text-blue-300"
+                            }`}
+                          >
+                            {item.status}
+                          </Badge>
+                        </div>
+
+                        <div>
+                          <h3 className="text-2xl font-bold leading-tight tracking-tight">
+                            {item.degree}
+                          </h3>
+                          <p className="mt-2 text-lg font-medium text-blue-400">
+                            {item.school}
+                          </p>
+                          <p className="mt-1 flex items-center gap-1.5 text-sm text-white/40">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {item.location}
+                          </p>
+                        </div>
+
+                        <p className="leading-relaxed text-white/50">
+                          {item.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-2">
+                          {item.tags.map((t) => (
+                            <Badge
+                              key={t}
+                              variant="outline"
+                              className="rounded-full border-white/10 bg-white/5 text-white/60"
+                            >
+                              {t}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 </div>
               );
             })}

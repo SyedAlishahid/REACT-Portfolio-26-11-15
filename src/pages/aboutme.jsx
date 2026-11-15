@@ -4,7 +4,8 @@ import a from "../assets/1.png";
 import htmlLogo from "../assets/images/html.svg";
 import cssLogo from "../assets/images/css.svg";
 import jsLogo from "../assets/images/javascript.svg";
-
+import { motion } from "framer-motion";
+import { fadeUp, scaleIn, stagger, viewport } from "../lib/motion";
 // CSS & UI Libraries
 import bootstrapLogo from "../assets/images/bootstrap.png";
 import tailwindLogo from "../assets/images/tailwindcss.svg";
@@ -58,17 +59,33 @@ export default function AboutSection() {
       className="relative isolate overflow-hidden bg-[#05060a] text-white"
     >
       {/* background glow */}
-      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-[380px] w-[380px] rounded-full bg-blue-600/15 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-[320px] w-[320px] rounded-full bg-purple-600/10 blur-[120px]" />
+      <motion.div
+        animate={{ scale: [1, 1.15, 1] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -left-32 top-10 -z-10 h-[380px] w-[380px] rounded-full bg-blue-600/15 blur-[120px]"
+      />
+      <motion.div
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-[320px] w-[320px] rounded-full bg-purple-600/10 blur-[120px]"
+      />
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-28">
         {/* LEFT: about text */}
-        <div>
-          <h2 className="text-6xl font-bold italic tracking-tight sm:text-7xl md:text-8xl [font-family:'Caveat','Kalam',cursive]">
+        <motion.div
+          variants={stagger(0.12)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+        >
+          <motion.h2
+            variants={fadeUp}
+            className="text-6xl font-bold italic tracking-tight sm:text-7xl md:text-8xl [font-family:'Caveat','Kalam',cursive]"
+          >
             About Me
-          </h2>
+          </motion.h2>
 
-          {/* hand-drawn arrow */}
+          {/* hand-drawn arrow (draws itself) */}
           <svg
             viewBox="0 0 120 130"
             fill="none"
@@ -79,59 +96,89 @@ export default function AboutSection() {
             className="ml-8 mt-2 h-20 w-20 text-white/90 sm:h-24 sm:w-24"
             aria-hidden="true"
           >
-            <path d="M22 8c-12 25-14 50 8 58 18 6 32-12 14-22-14-8-30 6-12 22 14 12 38 22 62 34" />
-            <path d="M92 90l16 14-24 4" />
+            <motion.path
+              d="M22 8c-12 25-14 50 8 58 18 6 32-12 14-22-14-8-30 6-12 22 14 12 38 22 62 34"
+              initial={{ pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 1 }}
+              viewport={viewport}
+              transition={{ duration: 1.2, delay: 0.5, ease: "easeInOut" }}
+            />
+            <motion.path
+              d="M92 90l16 14-24 4"
+              initial={{ pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 1 }}
+              viewport={viewport}
+              transition={{ duration: 0.4, delay: 1.6, ease: "easeOut" }}
+            />
           </svg>
 
-          <div className="mt-6 max-w-xl space-y-6 text-lg font-light leading-relaxed text-white/50 sm:text-xl">
-            <p>
+          <motion.div
+            variants={stagger(0.18, 0.1)}
+            className="mt-6 max-w-xl space-y-6 text-lg font-light leading-relaxed text-white/50 sm:text-xl"
+          >
+            <motion.p variants={fadeUp}>
               Hi! I'm{" "}
               <span className="font-semibold text-white">ALI SHAHID</span>, a
               passionate{" "}
               <span className="text-white">MERN Stack Developer</span> based in
               Karachi.
-            </p>
-            <p>
+            </motion.p>
+            <motion.p variants={fadeUp}>
               I specialize in building full-stack applications using{" "}
               <span className="text-white">
                 MongoDB, Express.js, React, and Node.js
               </span>
               . My journey involves turning clean code into functional,
               beautiful, and seamless user experiences.
-            </p>
-            <p>
+            </motion.p>
+            <motion.p variants={fadeUp}>
               When I'm not coding, I'm exploring new web technologies,
               optimizing application performance, or refining design details to
               perfection.
-            </p>
-          </div>
-        </div>
+            </motion.p>
+          </motion.div>
+        </motion.div>
 
         {/* RIGHT: tech stack */}
-        <div>
-          <h3 className="flex items-center gap-4 text-3xl font-bold tracking-tight sm:text-4xl">
+        <motion.div
+          variants={stagger(0.1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+        >
+          <motion.h3
+            variants={fadeUp}
+            className="flex items-center gap-4 text-3xl font-bold tracking-tight sm:text-4xl"
+          >
             <span className="h-10 w-1 rounded-full bg-blue-500" />
             Tech Stack
-          </h3>
+          </motion.h3>
 
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
+          <motion.div
+            variants={stagger(0.06, 0.1)}
+            className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4"
+          >
             {TECHS.map((tech) => (
-              <Card
+              <motion.div
                 key={tech.name}
-                className="group flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border-white/10 bg-white/[0.04] p-4 text-white shadow-lg backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-blue-500/50 hover:bg-white/[0.07] hover:shadow-blue-600/20"
+                variants={scaleIn}
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.96 }}
               >
-                <img
-                  src={tech.logo}
-                  alt={tech.name}
-                  className="h-12 w-12 object-contain transition duration-300 group-hover:scale-110 sm:h-14 sm:w-14"
-                />
-                <span className="text-center text-sm font-medium text-white/60 transition group-hover:text-white">
-                  {tech.name}
-                </span>
-              </Card>
+                <Card className="group flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border-white/10 bg-white/[0.04] p-4 text-white shadow-lg backdrop-blur transition duration-300 hover:border-blue-500/50 hover:bg-white/[0.07] hover:shadow-blue-600/20">
+                  <img
+                    src={tech.logo}
+                    alt={tech.name}
+                    className="h-12 w-12 object-contain transition duration-300 group-hover:scale-110 sm:h-14 sm:w-14"
+                  />
+                  <span className="text-center text-sm font-medium text-white/60 transition group-hover:text-white">
+                    {tech.name}
+                  </span>
+                </Card>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
